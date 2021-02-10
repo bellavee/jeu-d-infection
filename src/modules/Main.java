@@ -14,8 +14,9 @@ public class Main {
         while (!play.isOver()) {
             int move = scan.nextInt();
 
-            play.execute(move);
-            play.updateScore();
+            if (play.isValid(move))
+                play.play(move);
+
             play.getMove();
 
             play.display();

@@ -8,8 +8,9 @@ public class State {
     private String currentPlayer;
     private String tab[][] = new String[7][7];
 
-    int nbOfBlue = 0;
-    int nbOfRed = 0;
+    // 25 pions au début
+    int nbOfBlue = 25;
+    int nbOfRed = 25;
 
     float scoreOfBlue = 0;
     float scoreOfRed = 0;
@@ -72,16 +73,18 @@ public class State {
         return getMove;
     }
 
-    public void updateScore() {
-        this.scoreOfBlue += (this.nbOfBlue / (this.nbOfBlue + this.nbOfRed));
-        this.scoreOfRed += (this.nbOfRed / (this.nbOfBlue + this.nbOfRed));
+    // pas necessaire maintenant
+    public boolean isValid(int index) {
+        ArrayList<Integer> move = getMove();
+        return move.contains(index);
     }
 
+    // pas marche
     public float getScore(String player) {
         if (player.equals(this.bluePlayer))
-            return this.scoreOfBlue;
+            return this.scoreOfBlue += this.nbOfBlue / (this.nbOfBlue + this.nbOfRed);
         else
-            return this.scoreOfRed;
+            return this.scoreOfRed += this.nbOfRed / (this.nbOfBlue + this.nbOfRed);
     }
 
     public void changePlayer() {
@@ -91,25 +94,37 @@ public class State {
             this.currentPlayer = this.bluePlayer;
     }
 
-    public void execute(int index) {
+    public void play(int index) {
         int row = index / 7;
         int col = index % 7;
+
         if (this.currentPlayer.equals(this.bluePlayer)) {
             this.tab[row][col] = this.bluePlayer;
-            this.nbOfBlue += 1;
+            this.nbOfBlue -= 1;
 
         } else {
             this.tab[row][col] = this.redPlayer;
-            this.nbOfRed += 1;
+            this.nbOfRed -= 1;
         }
 
         changePlayer();
+
     }
 
     public boolean isOver() {
-        if (getMove().isEmpty()) {
+
+        // 1. un des joueurs ne dispose plus de pion
+        if (this.nbOfBlue == 0)
             return true;
-        }
+
+        if (this.nbOfRed == 0)
+            return true;
+
+        // 2. les deux joueurs doivent passer leur tour
+
+        // 3. le plateau de jeu revient dans un état qui a déjà été joué
+        if (getMove().isEmpty())
+            return true;
 
         return false;
     }
@@ -124,11 +139,5 @@ public class State {
 
     // return bestMove;
     // }
-
-    // le gagnant est celui qui a le plus de pions en fin de partie.
-    // la partie se termine quand
-    // 1. un des joueurs ne dispose plus de pion
-    // 2. les deux joueurs doivent passer leur tour
-    // 3. le plateau de jeu revient dans un état qui a déjà été joué
 
 }
