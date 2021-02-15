@@ -3,31 +3,34 @@ package modules;
 import java.util.ArrayList;
 
 public class State {
-    private String bluePlayer; // bleu
-    private String redPlayer; // rouge
-    private String currentPlayer;
-    private String tab[][] = new String[7][7];
+    String bluePlayer; // bleu
+    String redPlayer; // rouge
+    String currentPlayer;
+    String tab[][];
+    int size;
 
     // 25 pions au début
-    int nbOfBlue = 25;
-    int nbOfRed = 25;
+    int nbOfBlue = 22;
+    int nbOfRed = 22;
 
     float scoreOfBlue = 0;
     float scoreOfRed = 0;
 
-    public State(String p1, String p2) {
+    public State(String p1, String p2, int size) {
+        this.tab = new String[size][size];
         this.bluePlayer = p1;
         this.redPlayer = p2;
         this.currentPlayer = p1;
-        this.tab[0][6] = p1;
-        this.tab[6][0] = p1;
-        this.tab[0][0] = p2;
-        this.tab[6][6] = p2;
+        this.size = size;
+        this.tab[0][0] = p1;
+        this.tab[size - 1][size - 1] = p1;
+        this.tab[size - 1][0] = p2;
+        this.tab[0][size - 1] = p2;
     }
 
     public void display() {
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
                 if (this.tab[i][j] == null)
                     System.out.print(".\t");
                 if (this.tab[i][j] == this.bluePlayer)
@@ -49,8 +52,12 @@ public class State {
         System.out.println("Red's score: " + this.scoreOfRed);
     }
 
+    public String moveToString(int index) {
+        return index + " = " + "(" + index / 7 + ", " + index % 7 + ")";
+    }
+
     public void displayMove() {
-        for (int move : getMove())
+        for (int move : getMove(getCurrentPlayer()))
             System.out.println(moveToString(move));
     }
 
@@ -58,25 +65,68 @@ public class State {
         return this.currentPlayer;
     }
 
-    public String moveToString(int index) {
-        return index + " = " + "(" + index / 7 + ", " + index % 7 + ")";
+    // public int indexToRow(int index) {
+    // return index / 7;
+    // }
+
+    // public int indexToCol(int index) {
+    // return index % 7;
+    // }
+
+    // public boolean isBlue(int index) {
+    // if (this.tab[indexToRow(index)][indexToCol(index)] == this.bluePlayer)
+    // return true;
+    // return false;
+    // }
+
+    // public boolean isRed(int index) {
+    // if (this.tab[indexToRow(index)][indexToCol(index)] == this.redPlayer)
+    // return true;
+    // return false;
+    // }
+
+    public int coorToInt(int x, int y) {
+        return x * this.size + y;
     }
 
-    public ArrayList<Integer> getMove() {
+    public boolean isValid(int index) {
+        if (index > 0 && index < this.size * this.size) {
+            if (this.tab[index / 7][index % 7] == null)
+                return true;
+        }
+
+        return false;
+    }
+
+    public ArrayList<Integer> getMove(String player) {
+        ArrayList<Integer> positions = new ArrayList<>();
         ArrayList<Integer> getMove = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
-                if (this.tab[i][j] == null)
-                    getMove.add(i * 7 + j);
+                if (this.currentPlayer.equals(player) && this.tab[i][j] == player) {
+                    // possible forward & backward positions
+                    positions.add(coorToInt(i + 1, j));
+                    positions.add(coorToInt(i - 1, j));
+
+                    // possible diagonal positions
+                    positions.add(coorToInt(i + 1, j + 1));
+                    positions.add(coorToInt(i + 1, j - 1));
+                    positions.add(coorToInt(i - 1, j + 1));
+                    positions.add(coorToInt(i - 1, j - 1));
+
+                    // possible sideways positions
+                    positions.add(coorToInt(i, j + 1));
+                    positions.add(coorToInt(i, j - 1));
+                }
+            }
+        }
+
+        for (int move : positions) {
+            if (isValid(move)) {
+                getMove.add(move);
             }
         }
         return getMove;
-    }
-
-    // pas necessaire maintenant
-    public boolean isValid(int index) {
-        ArrayList<Integer> move = getMove();
-        return move.contains(index);
     }
 
     // pas marche
@@ -106,9 +156,7 @@ public class State {
             this.tab[row][col] = this.redPlayer;
             this.nbOfRed -= 1;
         }
-
         changePlayer();
-
     }
 
     public boolean isOver() {
@@ -123,7 +171,7 @@ public class State {
         // 2. les deux joueurs doivent passer leur tour
 
         // 3. le plateau de jeu revient dans un état qui a déjà été joué
-        if (getMove().isEmpty())
+        if (getMove(getCurrentPlayer()).isEmpty())
             return true;
 
         return false;
