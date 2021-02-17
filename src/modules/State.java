@@ -6,135 +6,123 @@ public class State {
     String bluePlayer; // bleu
     String redPlayer; // rouge
     String currentPlayer;
-    String tab[][];
+    String board[][];
     int size;
 
     // 25 pions au début
-    int nbOfBlue = 22;
-    int nbOfRed = 22;
-
-    float scoreOfBlue = 0;
-    float scoreOfRed = 0;
+    int piecesOfBlue = 0;
+    int piecesOfRed = 0;
 
     public State(String p1, String p2, int size) {
-        this.tab = new String[size][size];
+        this.board = new String[size][size];
         this.bluePlayer = p1;
         this.redPlayer = p2;
         this.currentPlayer = p1;
+
         this.size = size;
-        this.tab[0][0] = p1;
-        this.tab[size - 1][size - 1] = p1;
-        this.tab[size - 1][0] = p2;
-        this.tab[0][size - 1] = p2;
+        this.board[0][0] = p1;
+        this.board[size - 1][size - 1] = p1;
+        this.board[size - 1][0] = p2;
+        this.board[0][size - 1] = p2;
     }
 
     public void display() {
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
-                if (this.tab[i][j] == null)
+                if (this.board[i][j] == null)
                     System.out.print(".\t");
-                if (this.tab[i][j] == this.bluePlayer)
-                    System.out.print("〇\t");
-                if (this.tab[i][j] == this.redPlayer)
-                    System.out.print("⬤\t");
+                if (this.board[i][j] == this.bluePlayer) {
+                    System.out.print("▢\t");
+                    this.piecesOfBlue++;
+                }
+                if (this.board[i][j] == this.redPlayer) {
+                    System.out.print("✿\t");
+                    this.piecesOfRed++;
+                }
             }
             System.out.println();
         }
     }
 
     public void displayNumberOf() {
-        System.out.println("Number of Blue: " + this.nbOfBlue);
-        System.out.println("Number of Red: " + this.nbOfRed);
-    }
-
-    public void displayScore() {
-        System.out.println("Blue's score: " + this.scoreOfBlue);
-        System.out.println("Red's score: " + this.scoreOfRed);
-    }
-
-    public String moveToString(int index) {
-        return index + " = " + "(" + index / 7 + ", " + index % 7 + ")";
+        System.out.println("Number of Blue: " + this.piecesOfBlue);
+        System.out.println("Number of Red: " + this.piecesOfRed);
     }
 
     public void displayMove() {
-        for (int move : getMove(getCurrentPlayer()))
-            System.out.println(moveToString(move));
+        for (Move move : getMove(getCurrentPlayer()))
+            System.out.println(move.end.toString());
     }
 
     public String getCurrentPlayer() {
         return this.currentPlayer;
     }
 
-    // public int indexToRow(int index) {
-    // return index / 7;
-    // }
-
-    // public int indexToCol(int index) {
-    // return index % 7;
-    // }
-
-    // public boolean isBlue(int index) {
-    // if (this.tab[indexToRow(index)][indexToCol(index)] == this.bluePlayer)
-    // return true;
-    // return false;
-    // }
-
-    // public boolean isRed(int index) {
-    // if (this.tab[indexToRow(index)][indexToCol(index)] == this.redPlayer)
-    // return true;
-    // return false;
-    // }
-
-    public int coorToInt(int x, int y) {
-        return x * this.size + y;
+    public int getCurrentPieces() {
+        if (this.currentPlayer.equals(this.bluePlayer))
+            return this.piecesOfBlue;
+        else
+            return this.piecesOfRed;
     }
 
-    public boolean isValid(int index) {
-        if (index > 0 && index < this.size * this.size) {
-            if (this.tab[index / 7][index % 7] == null)
-                return true;
-        }
+    public boolean isValid(Coordinate coord) {
+        if (coord.x >= 0 && coord.y >= 0 && coord.x < this.size && coord.y < this.size
+                && this.board[coord.x][coord.y] == null)
+            return true;
 
         return false;
     }
 
-    public ArrayList<Integer> getMove(String player) {
-        ArrayList<Integer> positions = new ArrayList<>();
-        ArrayList<Integer> getMove = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
-                if (this.currentPlayer.equals(player) && this.tab[i][j] == player) {
-                    // possible forward & backward positions
-                    positions.add(coorToInt(i + 1, j));
-                    positions.add(coorToInt(i - 1, j));
+    public ArrayList<Move> getMove(String player) {
+        ArrayList<Move> positions = new ArrayList<>();
+        ArrayList<Move> getMove = new ArrayList<>();
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                if (this.board[i][j] == player) {
+                    Coordinate start = new Coordinate(i, j);
 
-                    // possible diagonal positions
-                    positions.add(coorToInt(i + 1, j + 1));
-                    positions.add(coorToInt(i + 1, j - 1));
-                    positions.add(coorToInt(i - 1, j + 1));
-                    positions.add(coorToInt(i - 1, j - 1));
+                    // clone forward & backward positions
+                    positions.add(new Move(start, new Coordinate(i + 1, j), 'C'));
+                    positions.add(new Move(start, new Coordinate(i - 1, j), 'C'));
 
-                    // possible sideways positions
-                    positions.add(coorToInt(i, j + 1));
-                    positions.add(coorToInt(i, j - 1));
+                    // clone diagonal positions
+                    positions.add(new Move(start, new Coordinate(i + 1, j + 1), 'C'));
+                    positions.add(new Move(start, new Coordinate(i + 1, j - 1), 'C'));
+                    positions.add(new Move(start, new Coordinate(i - 1, j + 1), 'C'));
+                    positions.add(new Move(start, new Coordinate(i - 1, j - 1), 'C'));
+
+                    // clone sideways positions
+                    positions.add(new Move(start, new Coordinate(i, j + 1), 'C'));
+                    positions.add(new Move(start, new Coordinate(i, j - 1), 'C'));
+
+                    // U: UP, D: DOWN, L: LEFT, R: RIGHT
+                    positions.add(new Move(start, new Coordinate(i - 2, j), 'U'));
+                    positions.add(new Move(start, new Coordinate(i + 2, j), 'D'));
+                    positions.add(new Move(start, new Coordinate(i, j - 2), 'L'));
+                    positions.add(new Move(start, new Coordinate(i, j + 2), 'R'));
                 }
             }
         }
 
-        for (int move : positions) {
-            if (isValid(move)) {
+        for (Move move : positions) {
+            if (isValid(move.end)) {
                 getMove.add(move);
+                // System.out.println(move.end.toString());
             }
         }
+
         return getMove;
     }
 
-    // pas marche
     public float getScore(String player) {
-        if (player.equals(this.bluePlayer))
-            return this.scoreOfBlue += this.nbOfBlue / (this.nbOfBlue + this.nbOfRed);
-        else
-            return this.scoreOfRed += this.nbOfRed / (this.nbOfBlue + this.nbOfRed);
+        int score = 0;
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                if (this.board[i][j] == player)
+                    score += getCurrentPieces() % (this.piecesOfBlue + this.piecesOfRed);
+            }
+        }
+        return score;
     }
 
     public void changePlayer() {
@@ -144,48 +132,105 @@ public class State {
             this.currentPlayer = this.bluePlayer;
     }
 
-    public void play(int index) {
-        int row = index / 7;
-        int col = index % 7;
+    public void transform(Coordinate coord) {
 
-        if (this.currentPlayer.equals(this.bluePlayer)) {
-            this.tab[row][col] = this.bluePlayer;
-            this.nbOfBlue -= 1;
+        // forward & backward positions
+        if (coord.x < this.size - 1 && this.board[coord.x + 1][coord.y] != this.currentPlayer
+                && this.board[coord.x + 1][coord.y] != null)
+            this.board[coord.x + 1][coord.y] = this.currentPlayer;
 
-        } else {
-            this.tab[row][col] = this.redPlayer;
-            this.nbOfRed -= 1;
+        if (coord.x > 0 && this.board[coord.x - 1][coord.y] != this.currentPlayer
+                && this.board[coord.x - 1][coord.y] != null)
+            this.board[coord.x - 1][coord.y] = this.currentPlayer;
+
+        // diagonal positions
+        if (coord.x < this.size - 1 && coord.y < this.size - 1
+                && this.board[coord.x + 1][coord.y + 1] != this.currentPlayer
+                && this.board[coord.x + 1][coord.y + 1] != null)
+            this.board[coord.x + 1][coord.y + 1] = this.currentPlayer;
+
+        if (coord.x < this.size - 1 && coord.y > 0 && this.board[coord.x + 1][coord.y - 1] != this.currentPlayer
+                && this.board[coord.x + 1][coord.y - 1] != null)
+            this.board[coord.x + 1][coord.y - 1] = this.currentPlayer;
+
+        if (coord.x > 0 && coord.y < this.size - 1 && this.board[coord.x - 1][coord.y + 1] != this.currentPlayer
+                && this.board[coord.x - 1][coord.y + 1] != null)
+            this.board[coord.x - 1][coord.y + 1] = this.currentPlayer;
+
+        if (coord.x > 0 && coord.y > 0 && this.board[coord.x - 1][coord.y - 1] != this.currentPlayer
+                && this.board[coord.x - 1][coord.y - 1] != null)
+            this.board[coord.x - 1][coord.y - 1] = this.currentPlayer;
+
+        // sideways positions
+        if (coord.y < this.size - 1 && this.board[coord.x][coord.y + 1] != this.currentPlayer
+                && this.board[coord.x][coord.y + 1] != null)
+            this.board[coord.x][coord.y + 1] = this.currentPlayer;
+
+        if (coord.y > 0 && this.board[coord.x][coord.y - 1] != this.currentPlayer
+                && this.board[coord.x][coord.y - 1] != null)
+            this.board[coord.x][coord.y - 1] = this.currentPlayer;
+    }
+
+    public void play(Move move) {
+        Coordinate start = move.start;
+        Coordinate end = move.end;
+
+        if (move.type == 'C') {
+            this.board[end.x][end.y] = this.currentPlayer;
+            transform(end);
         }
+
+        if (move.type == 'U' && start.x > 0 && this.board[start.x - 1][start.y] != this.currentPlayer
+                && this.board[start.x - 1][start.y] != null) {
+            this.board[start.x][start.y] = null;
+            this.board[end.x][end.y] = this.currentPlayer;
+        }
+
+        if (move.type == 'D' && start.y < this.size - 1 && this.board[start.x + 1][start.y] != this.currentPlayer
+                && this.board[start.x + 1][start.y] != null) {
+            this.board[start.x][start.y] = null;
+            this.board[end.x][end.y] = this.currentPlayer;
+        }
+
+        if (move.type == 'L' && start.y > 0 && this.board[start.x][start.y - 1] != this.currentPlayer
+                && this.board[start.x][start.y - 1] != null) {
+            this.board[start.x][start.y] = null;
+            this.board[end.x][end.y] = this.currentPlayer;
+        }
+
+        if (move.type == 'R' && start.y < this.size - 1 && this.board[start.x][start.y + 1] != this.currentPlayer
+                && this.board[start.x][start.y + 1] != null) {
+            this.board[start.x][start.y] = null;
+            this.board[end.x][end.y] = this.currentPlayer;
+        }
+
         changePlayer();
     }
 
     public boolean isOver() {
 
         // 1. un des joueurs ne dispose plus de pion
-        if (this.nbOfBlue == 0)
-            return true;
+        // if (this.piecesOfBlue == 0)
+        // return true;
 
-        if (this.nbOfRed == 0)
-            return true;
+        // if (this.piecesOfRed == 0)
+        // return true;
 
         // 2. les deux joueurs doivent passer leur tour
-
         // 3. le plateau de jeu revient dans un état qui a déjà été joué
-        if (getMove(getCurrentPlayer()).isEmpty())
+        if (getMove(this.currentPlayer).isEmpty())
             return true;
 
         return false;
     }
 
-    // public int getBestMove() {
-    // int bestVal = -9999;
-    // int bestMove = 0;
-
-    // for (int move : getMove()) {
-    // if (bestVal == -9999 || )
-    // }
-
-    // return bestMove;
-    // }
+    public String getWinner() {
+        if (getScore(this.bluePlayer) > getScore(this.redPlayer))
+            return this.bluePlayer;
+        else if (getScore(this.redPlayer) > getScore(this.bluePlayer))
+            return this.redPlayer;
+        else
+            return "Tie!";
+    }
 
 }

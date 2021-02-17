@@ -2,14 +2,12 @@ package modules;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Main {
 
-    public static int randomPlayer(ArrayList<Integer> getMove) {
+    public static Move randomPlayer(ArrayList<Move> getMove) {
         Random rand = new Random();
-        int move = getMove.get(rand.nextInt(getMove.size()));
-        return move;
+        return getMove.get(rand.nextInt(getMove.size()));
     }
 
     public static void main(String[] args) {
@@ -17,20 +15,20 @@ public class Main {
         String first = "blue";
         String second = "red";
         State game = new State(first, second, SIZE);
-        game.display();
-
-        Scanner scan = new Scanner(System.in);
 
         while (!game.isOver()) {
             String player = game.getCurrentPlayer();
-            int move = randomPlayer(game.getMove(player));
+            Move move = randomPlayer(game.getMove(player));
+            System.out.println("This is " + game.getCurrentPlayer() + "'s turn: " + move.type + " (no play -> pass)");
+
             game.play(move);
-            game.getMove(player);
-            game.displayMove();
             game.display();
-            game.displayNumberOf();
-            game.displayScore();
+
+            // System.out.println("Score of " + game.getCurrentPlayer() + " " +
+            // game.getScore(player));
+
         }
-        scan.close();
+        // System.out.println("Winner is: " + game.getWinner());
+
     }
 }
