@@ -3,11 +3,11 @@ package modules;
 import java.util.ArrayList;
 
 public class State {
-    String bluePlayer;
-    String redPlayer;
-    String currentPlayer;
-    String board[][];
-    int size;
+    private String bluePlayer;
+    private String redPlayer;
+    private String currentPlayer;
+    private int size;
+    private String board[][];
 
     int scoreBlue = 0;
     int scoreRed = 0;
@@ -17,12 +17,26 @@ public class State {
         this.bluePlayer = p1;
         this.redPlayer = p2;
         this.currentPlayer = p1;
-
         this.size = size;
-        this.board[0][0] = p1;
-        this.board[size - 1][size - 1] = p1;
-        this.board[size - 1][0] = p2;
-        this.board[0][size - 1] = p2;
+        this.board[0][0] = this.bluePlayer;
+        this.board[size - 1][size - 1] = this.bluePlayer;
+        this.board[size - 1][0] = this.redPlayer;
+        this.board[0][size - 1] = this.redPlayer;
+    }
+
+    /* -------------------- INSTALL -------------------- */
+
+    public State clone() {
+        State clone = new State(this.bluePlayer, this.redPlayer, this.size);
+        clone.board = new String[this.size][this.size];
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                clone.board[i][j] = this.board[i][j];
+            }
+        }
+
+        clone.currentPlayer = this.currentPlayer;
+        return clone;
     }
 
     /* -------------------- DISPLAY -------------------- */
@@ -152,7 +166,8 @@ public class State {
             this.board[coord.x][coord.y - 1] = this.currentPlayer;
     }
 
-    public void play(Move move) {
+    public State play(Move move) {
+        State newState = new State(this.bluePlayer, this.redPlayer, this.size);
         Coordinate start = move.start;
         Coordinate end = move.end;
 
@@ -182,6 +197,9 @@ public class State {
         }
 
         changePlayer();
+        newState.clone();
+
+        return newState;
 
     }
 

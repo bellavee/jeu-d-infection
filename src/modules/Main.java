@@ -16,18 +16,21 @@ public class Main {
         String second = "Red";
         State game = new State(first, second, SIZE);
 
+        AI ai = new AI("AI", 0, false);
+
         while (!game.isOver()) {
             String player = game.getCurrentPlayer();
-            Move move = randomPlayer(game.getMove(player));
+            // Move move = randomPlayer(game.getMove(player));
+            Move move = ai.getBestMove(game, 4);
             game.display();
 
             System.out.println("This is " + game.getCurrentPlayer() + "'s turn: " + move.type + " (no play -> pass)");
             System.out.println("Score of " + game.getCurrentPlayer() + " " + game.getScore(player));
 
             game.play(move);
-
         }
-        System.out.println("Winner is: " + game.getWinner());
+
+        // System.out.println("Winner is: " + game.getWinner());
 
     }
 }
