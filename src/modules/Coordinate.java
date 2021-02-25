@@ -17,10 +17,6 @@ public class Coordinate {
         return this.y;
     }
 
-    public int coordToInt(int size) {
-        return this.x * size + this.y;
-    }
-
     @Override
     public String toString() {
         return "[" + this.x + ", " + this.y + "]";
