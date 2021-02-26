@@ -26,17 +26,17 @@ public class State {
 
     /* -------------------- INSTALL -------------------- */
 
-    public State clone() {
-        State clone = new State(this.bluePlayer, this.redPlayer, this.size);
-        clone.board = new String[this.size][this.size];
+    public State copyState() {
+        State copyState = new State(this.bluePlayer, this.redPlayer, this.size);
+        copyState.board = new String[this.size][this.size];
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
-                clone.board[i][j] = this.board[i][j];
+                copyState.board[i][j] = this.board[i][j];
             }
         }
 
-        clone.currentPlayer = this.currentPlayer;
-        return clone;
+        copyState.currentPlayer = this.currentPlayer;
+        return copyState;
     }
 
     /* -------------------- DISPLAY -------------------- */
@@ -47,18 +47,19 @@ public class State {
                 if (this.board[i][j] == null)
                     System.out.print(".\t");
 
-                if (this.board[i][j] == this.bluePlayer) {
+                if (this.board[i][j] == this.bluePlayer)
                     System.out.print("▢\t");
-                    this.scoreBlue++;
-                }
 
-                if (this.board[i][j] == this.redPlayer) {
+                if (this.board[i][j] == this.redPlayer)
                     System.out.print("✿\t");
-                    this.scoreRed++;
-                }
             }
             System.out.println();
         }
+    }
+
+    public void displayScore() {
+        System.out.println("Score of " + this.bluePlayer + " " + getScore(this.bluePlayer));
+        System.out.println("Score of " + this.redPlayer + " " + getScore(this.redPlayer));
     }
 
     /* -------------------- GET LOCAL VARIABLE -------------------- */
@@ -120,11 +121,23 @@ public class State {
                 getMove.add(move);
         }
 
+        /* Move to pass */
+        // getMove.add(new Move(new Coordinate(0, 0), new Coordinate(0, 0), 'P'));
+
         return getMove;
     }
 
     public float getScore(String player) {
         float score = 0;
+
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                if (this.board[i][j] == this.bluePlayer)
+                    this.scoreBlue++;
+                if (this.board[i][j] == this.redPlayer)
+                    this.scoreRed++;
+            }
+        }
 
         if (player.equals(this.bluePlayer))
             score += (float) this.scoreBlue / (this.scoreBlue + this.scoreRed);
@@ -197,10 +210,20 @@ public class State {
         }
 
         changePlayer();
-        newState.clone();
+        newState.copyState();
 
         return newState;
 
+    }
+
+    public boolean isFull() {
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                if (this.board[i][j] != null)
+                    return false;
+            }
+        }
+        return true;
     }
 
     public boolean isOver() {
@@ -209,6 +232,9 @@ public class State {
         // 2. les deux joueurs doivent passer leur tour
         // 3. le plateau de jeu revient dans un état qui a déjà été joué
         if (getMove(this.currentPlayer).isEmpty())
+            return true;
+
+        if (isFull())
             return true;
 
         return false;
