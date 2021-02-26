@@ -9,8 +9,8 @@ public class State {
     private int size;
     private String board[][];
 
-    int scoreBlue = 0;
-    int scoreRed = 0;
+    int scoreFirst = 0;
+    int scoreSecond = 0;
 
     public State(String p1, String p2, int size) {
         this.board = new String[size][size];
@@ -109,10 +109,17 @@ public class State {
                     positions.add(new Move(start, new Coordinate(i, j - 1), 'C'));
 
                     // Shifting U: UP, D: DOWN, L: LEFT, R: RIGHT
-                    positions.add(new Move(start, new Coordinate(i - 2, j), 'U'));
-                    positions.add(new Move(start, new Coordinate(i + 2, j), 'D'));
-                    positions.add(new Move(start, new Coordinate(i, j - 2), 'L'));
-                    positions.add(new Move(start, new Coordinate(i, j + 2), 'R'));
+                    if (isValidOnBoard(start.x - 1, start.y) && isDifferentColor(start.x - 1, start.y))
+                        positions.add(new Move(start, new Coordinate(i - 2, j), 'U'));
+
+                    if (isValidOnBoard(start.x + 1, start.y) && isDifferentColor(start.x + 1, start.y))
+                        positions.add(new Move(start, new Coordinate(i + 2, j), 'D'));
+
+                    if (isValidOnBoard(start.x, start.y - 1) && isDifferentColor(start.x, start.y - 1))
+                        positions.add(new Move(start, new Coordinate(i, j - 2), 'L'));
+
+                    if (isValidOnBoard(start.x, start.y + 1) && isDifferentColor(start.x, start.y + 1))
+                        positions.add(new Move(start, new Coordinate(i, j + 2), 'R'));
                 }
             }
         }
@@ -131,16 +138,16 @@ public class State {
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
                 if (this.board[i][j] == this.firstPlayer)
-                    this.scoreBlue++;
+                    this.scoreFirst++;
                 if (this.board[i][j] == this.secondPlayer)
-                    this.scoreRed++;
+                    this.scoreSecond++;
             }
         }
 
         if (player.equals(this.firstPlayer))
-            score += (float) this.scoreBlue / (this.scoreBlue + this.scoreRed);
+            score += (float) this.scoreFirst / (this.scoreFirst + this.scoreSecond);
         else
-            score += (float) this.scoreRed / (this.scoreBlue + this.scoreRed);
+            score += (float) this.scoreSecond / (this.scoreFirst + this.scoreSecond);
 
         return score;
 
@@ -177,7 +184,7 @@ public class State {
             this.board[coord.x][coord.y - 1] = this.currentPlayer;
     }
 
-    public State play(Move move) {
+    public void play(Move move) {
         State newState = new State(this.firstPlayer, this.secondPlayer, this.size);
         Coordinate start = move.start;
         Coordinate end = move.end;
@@ -185,36 +192,14 @@ public class State {
         if (move.type == 'C') {
             this.board[end.x][end.y] = this.currentPlayer;
             infection(end);
-            changePlayer();
         }
 
-        if (move.type == 'U' && isValidOnBoard(start.x - 1, start.y) && isDifferentColor(start.x - 1, start.y)) {
+        else {
             this.board[start.x][start.y] = null;
             this.board[end.x][end.y] = this.currentPlayer;
-            changePlayer();
         }
 
-        if (move.type == 'D' && isValidOnBoard(start.x + 1, start.y) && isDifferentColor(start.x + 1, start.y)) {
-            this.board[start.x][start.y] = null;
-            this.board[end.x][end.y] = this.currentPlayer;
-            changePlayer();
-        }
-
-        if (move.type == 'L' && isValidOnBoard(start.x, start.y - 1) && isDifferentColor(start.x, start.y - 1)) {
-            this.board[start.x][start.y] = null;
-            this.board[end.x][end.y] = this.currentPlayer;
-            changePlayer();
-        }
-
-        if (move.type == 'R' && isValidOnBoard(start.x, start.y + 1) && isDifferentColor(start.x, start.y + 1)) {
-            this.board[start.x][start.y] = null;
-            this.board[end.x][end.y] = this.currentPlayer;
-            changePlayer();
-        }
-
-        newState.copyState();
-
-        return newState;
+        changePlayer();
 
     }
 

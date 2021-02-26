@@ -29,7 +29,8 @@ public class AI {
             if (state.getCurrentPlayer().equals(this.player)) {
                 b = Float.NEGATIVE_INFINITY;
                 for (Move move : moves) {
-                    State nextState = state.play(move);
+                    State nextState = state.copyState();
+                    nextState.play(move);
                     m = minmax(nextState, depth - 1);
                     if (b < m)
                         b = m;
@@ -40,7 +41,8 @@ public class AI {
             else {
                 b = Float.POSITIVE_INFINITY;
                 for (Move move : moves) {
-                    State nextState = state.play(move);
+                    State nextState = state.copyState();
+                    nextState.play(move);
                     m = minmax(nextState, depth - 1);
                     if (b > m)
                         b = m;
@@ -58,10 +60,12 @@ public class AI {
             return state.getScore(this.player);
 
         else {
+
             /* Maximizing player */
             if (state.getCurrentPlayer().equals(this.player)) {
                 for (Move move : moves) {
-                    State nextState = state.play(move);
+                    State nextState = state.copyState();
+                    nextState.play(move);
                     alpha = Float.max(alpha, alphabeta(nextState, depth - 1, alpha, beta));
                     if (alpha >= beta)
                         return alpha;
@@ -73,7 +77,8 @@ public class AI {
             /* Minimizing player */
             else {
                 for (Move move : moves) {
-                    State nextState = state.play(move);
+                    State nextState = state.copyState();
+                    nextState.play(move);
                     beta = Float.min(beta, alphabeta(nextState, depth - 1, alpha, beta));
 
                     if (alpha >= beta)
@@ -86,13 +91,14 @@ public class AI {
     }
 
     public Move getBestMove(State state, int depth, boolean option) {
+        float value;
         float bestValue = Float.NEGATIVE_INFINITY;
         Move bestMove = new Move();
         ArrayList<Move> moves = state.getMove(this.player);
 
         for (Move move : moves) {
-            State nextState = state.play(move);
-            float value = minmax(nextState, depth);
+            State nextState = state.copyState();
+            nextState.play(move);
 
             if (option)
                 value = minmax(nextState, depth - 1);

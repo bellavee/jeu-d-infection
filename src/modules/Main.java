@@ -25,9 +25,9 @@ public class Main {
             // Move move = randomPlayer(game.getMove(player));
 
             /* true: minmax, false: alphabeta */
-            Move move = ai.getBestMove(game, 3, true);
+            Move move = ai.getBestMove(game, 4, true);
 
-            System.out.println("\nThis is " + game.getCurrentPlayer() + "'s turn (no play -> pass)");
+            System.out.println("\nThis is " + game.getCurrentPlayer() + "'s turn, action: " + move.getAction());
 
             game.play(move);
             game.display();
