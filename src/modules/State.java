@@ -185,7 +185,6 @@ public class State {
     }
 
     public void play(Move move) {
-        State newState = new State(this.firstPlayer, this.secondPlayer, this.size);
         Coordinate start = move.start;
         Coordinate end = move.end;
 
