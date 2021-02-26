@@ -19,6 +19,7 @@ public class AI {
         float b;
         float m;
         ArrayList<Move> moves = state.getMove(this.player);
+
         if (depth == 0 || state.isOver())
             return state.getScore(this.player);
 
@@ -52,6 +53,7 @@ public class AI {
 
     public float alphabeta(State state, int depth, float alpha, float beta) {
         ArrayList<Move> moves = state.getMove(this.player);
+
         if (depth == 0 || state.isOver())
             return state.getScore(this.player);
 
@@ -83,14 +85,19 @@ public class AI {
         }
     }
 
-    public Move getBestMove(State state, int depth) {
+    public Move getBestMove(State state, int depth, boolean option) {
         float bestValue = Float.NEGATIVE_INFINITY;
         Move bestMove = new Move();
-
         ArrayList<Move> moves = state.getMove(this.player);
+
         for (Move move : moves) {
             State nextState = state.play(move);
             float value = minmax(nextState, depth);
+
+            if (option)
+                value = minmax(nextState, depth - 1);
+            else
+                value = alphabeta(nextState, depth - 1, 1, 0);
 
             if (value > bestValue) {
                 bestValue = value;

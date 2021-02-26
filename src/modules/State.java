@@ -3,8 +3,8 @@ package modules;
 import java.util.ArrayList;
 
 public class State {
-    private String bluePlayer;
-    private String redPlayer;
+    private String firstPlayer;
+    private String secondPlayer;
     private String currentPlayer;
     private int size;
     private String board[][];
@@ -14,20 +14,20 @@ public class State {
 
     public State(String p1, String p2, int size) {
         this.board = new String[size][size];
-        this.bluePlayer = p1;
-        this.redPlayer = p2;
+        this.firstPlayer = p1;
+        this.secondPlayer = p2;
         this.currentPlayer = p1;
         this.size = size;
-        this.board[0][0] = this.bluePlayer;
-        this.board[size - 1][size - 1] = this.bluePlayer;
-        this.board[size - 1][0] = this.redPlayer;
-        this.board[0][size - 1] = this.redPlayer;
+        this.board[0][0] = this.firstPlayer;
+        this.board[size - 1][size - 1] = this.firstPlayer;
+        this.board[size - 1][0] = this.secondPlayer;
+        this.board[0][size - 1] = this.secondPlayer;
     }
 
     /* -------------------- INSTALL -------------------- */
 
     public State copyState() {
-        State copyState = new State(this.bluePlayer, this.redPlayer, this.size);
+        State copyState = new State(this.firstPlayer, this.secondPlayer, this.size);
         copyState.board = new String[this.size][this.size];
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
@@ -47,10 +47,10 @@ public class State {
                 if (this.board[i][j] == null)
                     System.out.print(".\t");
 
-                if (this.board[i][j] == this.bluePlayer)
+                if (this.board[i][j] == this.firstPlayer)
                     System.out.print("▢\t");
 
-                if (this.board[i][j] == this.redPlayer)
+                if (this.board[i][j] == this.secondPlayer)
                     System.out.print("✿\t");
             }
             System.out.println();
@@ -58,8 +58,8 @@ public class State {
     }
 
     public void displayScore() {
-        System.out.println("Score of " + this.bluePlayer + " " + getScore(this.bluePlayer));
-        System.out.println("Score of " + this.redPlayer + " " + getScore(this.redPlayer));
+        System.out.println("Score of " + this.firstPlayer + " " + getScore(this.firstPlayer));
+        System.out.println("Score of " + this.secondPlayer + " " + getScore(this.secondPlayer));
     }
 
     /* -------------------- GET LOCAL VARIABLE -------------------- */
@@ -88,6 +88,7 @@ public class State {
     public ArrayList<Move> getMove(String player) {
         ArrayList<Move> positions = new ArrayList<>();
         ArrayList<Move> getMove = new ArrayList<>();
+
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
                 if (this.board[i][j] == player) {
@@ -107,7 +108,7 @@ public class State {
                     positions.add(new Move(start, new Coordinate(i, j + 1), 'C'));
                     positions.add(new Move(start, new Coordinate(i, j - 1), 'C'));
 
-                    // U: UP, D: DOWN, L: LEFT, R: RIGHT
+                    // Shifting U: UP, D: DOWN, L: LEFT, R: RIGHT
                     positions.add(new Move(start, new Coordinate(i - 2, j), 'U'));
                     positions.add(new Move(start, new Coordinate(i + 2, j), 'D'));
                     positions.add(new Move(start, new Coordinate(i, j - 2), 'L'));
@@ -121,9 +122,6 @@ public class State {
                 getMove.add(move);
         }
 
-        /* Move to pass */
-        // getMove.add(new Move(new Coordinate(0, 0), new Coordinate(0, 0), 'P'));
-
         return getMove;
     }
 
@@ -132,14 +130,14 @@ public class State {
 
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
-                if (this.board[i][j] == this.bluePlayer)
+                if (this.board[i][j] == this.firstPlayer)
                     this.scoreBlue++;
-                if (this.board[i][j] == this.redPlayer)
+                if (this.board[i][j] == this.secondPlayer)
                     this.scoreRed++;
             }
         }
 
-        if (player.equals(this.bluePlayer))
+        if (player.equals(this.firstPlayer))
             score += (float) this.scoreBlue / (this.scoreBlue + this.scoreRed);
         else
             score += (float) this.scoreRed / (this.scoreBlue + this.scoreRed);
@@ -149,10 +147,10 @@ public class State {
     }
 
     public void changePlayer() {
-        if (this.currentPlayer.equals(this.bluePlayer))
-            this.currentPlayer = this.redPlayer;
+        if (this.currentPlayer.equals(this.firstPlayer))
+            this.currentPlayer = this.secondPlayer;
         else
-            this.currentPlayer = this.bluePlayer;
+            this.currentPlayer = this.firstPlayer;
     }
 
     public void infection(Coordinate coord) {
@@ -180,36 +178,40 @@ public class State {
     }
 
     public State play(Move move) {
-        State newState = new State(this.bluePlayer, this.redPlayer, this.size);
+        State newState = new State(this.firstPlayer, this.secondPlayer, this.size);
         Coordinate start = move.start;
         Coordinate end = move.end;
 
         if (move.type == 'C') {
             this.board[end.x][end.y] = this.currentPlayer;
             infection(end);
+            changePlayer();
         }
 
         if (move.type == 'U' && isValidOnBoard(start.x - 1, start.y) && isDifferentColor(start.x - 1, start.y)) {
             this.board[start.x][start.y] = null;
             this.board[end.x][end.y] = this.currentPlayer;
+            changePlayer();
         }
 
         if (move.type == 'D' && isValidOnBoard(start.x + 1, start.y) && isDifferentColor(start.x + 1, start.y)) {
             this.board[start.x][start.y] = null;
             this.board[end.x][end.y] = this.currentPlayer;
+            changePlayer();
         }
 
         if (move.type == 'L' && isValidOnBoard(start.x, start.y - 1) && isDifferentColor(start.x, start.y - 1)) {
             this.board[start.x][start.y] = null;
             this.board[end.x][end.y] = this.currentPlayer;
+            changePlayer();
         }
 
         if (move.type == 'R' && isValidOnBoard(start.x, start.y + 1) && isDifferentColor(start.x, start.y + 1)) {
             this.board[start.x][start.y] = null;
             this.board[end.x][end.y] = this.currentPlayer;
+            changePlayer();
         }
 
-        changePlayer();
         newState.copyState();
 
         return newState;
@@ -241,10 +243,10 @@ public class State {
     }
 
     public String getWinner() {
-        if (getScore(this.bluePlayer) > getScore(this.redPlayer))
-            return this.bluePlayer;
-        else if (getScore(this.redPlayer) > getScore(this.bluePlayer))
-            return this.redPlayer;
+        if (getScore(this.firstPlayer) > getScore(this.secondPlayer))
+            return this.firstPlayer;
+        else if (getScore(this.secondPlayer) > getScore(this.firstPlayer))
+            return this.secondPlayer;
         else
             return "Tie!";
     }
