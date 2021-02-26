@@ -94,21 +94,21 @@ public class State {
                 if (this.board[i][j] == player) {
                     Coordinate start = new Coordinate(i, j);
 
-                    // Clone forward & backward positions
+                    /* Clone forward & backward positions */
                     positions.add(new Move(start, new Coordinate(i + 1, j), 'C'));
                     positions.add(new Move(start, new Coordinate(i - 1, j), 'C'));
 
-                    // Clone diagonal positions
+                    /* Clone diagonal positions */
                     positions.add(new Move(start, new Coordinate(i + 1, j + 1), 'C'));
                     positions.add(new Move(start, new Coordinate(i + 1, j - 1), 'C'));
                     positions.add(new Move(start, new Coordinate(i - 1, j + 1), 'C'));
                     positions.add(new Move(start, new Coordinate(i - 1, j - 1), 'C'));
 
-                    // Clone sideways positions
+                    /* Clone sideways positions */
                     positions.add(new Move(start, new Coordinate(i, j + 1), 'C'));
                     positions.add(new Move(start, new Coordinate(i, j - 1), 'C'));
 
-                    // Shifting U: UP, D: DOWN, L: LEFT, R: RIGHT
+                    /* Shifting: U - UP, D - DOWN, L - LEFT, R - RIGHT */
                     if (isValidOnBoard(start.x - 1, start.y) && isDifferentColor(start.x - 1, start.y))
                         positions.add(new Move(start, new Coordinate(i - 2, j), 'U'));
 
@@ -161,13 +161,13 @@ public class State {
     }
 
     public void infection(Coordinate coord) {
-        // forward & backward positions
+        /* forward & backward positions */
         if (isValidOnBoard(coord.x + 1, coord.y) && isDifferentColor(coord.x + 1, coord.y))
             this.board[coord.x + 1][coord.y] = this.currentPlayer;
         if (isValidOnBoard(coord.x - 1, coord.y) && isDifferentColor(coord.x - 1, coord.y))
             this.board[coord.x - 1][coord.y] = this.currentPlayer;
 
-        // diagonal positions
+        /* diagonal positions */
         if (isValidOnBoard(coord.x + 1, coord.y + 1) && isDifferentColor(coord.x + 1, coord.y + 1))
             this.board[coord.x + 1][coord.y + 1] = this.currentPlayer;
         if (isValidOnBoard(coord.x + 1, coord.y - 1) && isDifferentColor(coord.x + 1, coord.y - 1))
@@ -177,7 +177,7 @@ public class State {
         if (isValidOnBoard(coord.x - 1, coord.y - 1) && isDifferentColor(coord.x - 1, coord.y - 1))
             this.board[coord.x - 1][coord.y - 1] = this.currentPlayer;
 
-        // sideways positions
+        /* sideways positions */
         if (isValidOnBoard(coord.x, coord.y + 1) && isDifferentColor(coord.x, coord.y + 1))
             this.board[coord.x][coord.y + 1] = this.currentPlayer;
         if (isValidOnBoard(coord.x, coord.y - 1) && isDifferentColor(coord.x, coord.y - 1))
@@ -214,9 +214,11 @@ public class State {
 
     public boolean isOver() {
 
-        // 1. un des joueurs ne dispose plus de pion
-        // 2. les deux joueurs doivent passer leur tour
-        // 3. le plateau de jeu revient dans un état qui a déjà été joué
+        /*
+         * 1. un des joueurs ne dispose plus de pion. 2. les deux joueurs doivent passer
+         * leur tour. 3. le plateau de jeu revient dans un état qui a déjà été joué.
+         */
+
         if (getMove(this.currentPlayer).isEmpty())
             return true;
 
