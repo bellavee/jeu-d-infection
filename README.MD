@@ -17,7 +17,7 @@
 ## `Interface Player`
 `Move getBestMove(State)` \
 `int getNodeCount()` \
-Personnes : BOUCHEFFA, VU, BENELAM, ADOUMA
+VU
 
 ## `Class AI(int, boolean) implements Player`
 `int getNodeCount()` \
@@ -25,42 +25,42 @@ Personnes : BOUCHEFFA, VU, BENELAM, ADOUMA
 `float minmax(State, int)` \
 `float alphabeta(State, int, float, float)` \
 `float getBestMove(State)`\
-Personnes : BOUCHEFFA, VU, BENELAM, ADOUMA
+VU, BOUCHEFFA, BENELAM, ADOUMA
 
 
 ## `Classe Coordinate(int, int)`
 `int getX()` \
 `int getY()` \
 `String toString()` \
-Personnes : BOUCHEFFA, VU
+VU, BOUCHEFFA
 
 ## `Classe Move(Coordinate, Coordinate, char)`
 `Coordinate getStart()` \
 `Coordinate getEnd()` \
 `char getAction()` \
 `String toString()` \
-Personnes : BOUCHEFFA, VU, ADOUMA
+VU, BOUCHEFFA, BOUCHEFFA, ADOUMA
 
 ## `Classe State(Player, Player, int)`
 `State copyState()` VU\
-`void display()` BOUCHEFFA, VU, ADOUMA\
-`void displayScore()` BOUCHEFFA, VU\
-`boolean isValidOnBoard(int, int)` VU\
-`boolean isDifferentColor(int, int)` VU\
-`boolean isValidToPlace(Coordinate)` VU\
-`ArrayList<Move> getMove()` BOUCHEFFA, VU, ADOUMA\
-`float getScore(Player)` BOUCHEFFA, VU, ADOUMA\
-`void changePlayer()` BOUCHEFFA, VU, ADOUMA\
+`void display()` VU, BOUCHEFFA, ADOUMA\
+`void displayScore()` VU, BOUCHEFFA\
+`boolean isValidOnBoard(int, int)` VU, BOUCHEFFA, ADOUMA\
+`boolean isDifferentColor(int, int)` VU, BOUCHEFFA, ADOUMA\
+`boolean isValidToPlace(Coordinate)` VU, BOUCHEFFA, ADOUMA\
+`ArrayList<Move> getMove()` VU, BOUCHEFFA, ADOUMA\
+`float getScore(Player)` VU, BOUCHEFFA, ADOUMA\
+`void changePlayer()` VU, BOUCHEFFA, ADOUMA\
 `void infection(Coordinate)` VU\
-`void play(Move)` BOUCHEFFA, VU, ADOUMA\
-`boolean isFull()` BOUCHEFFA, VU, ADOUMA\
-`boolean isOver()` BOUCHEFFA, VU, ADOUMA\
-`Player getWinner()` BOUCHEFFA, VU
+`void play(Move)` VU, BOUCHEFFA, ADOUMA\
+`boolean isFull()` VU, BOUCHEFFA, ADOUMA\
+`boolean isOver()` VU, BOUCHEFFA, ADOUMA\
+`Player getWinner()` VU, BOUCHEFFA
 
 
 
-## `Classe Main(Player, Player, int)`
+## `Classe Main()`
 `main()` \
-Personnes : BOUCHEFFA, VU, BENELAM, ADOUMA
+VU, BOUCHEFFA
 
 README écrit par VU Nguyen Phuong Vy
