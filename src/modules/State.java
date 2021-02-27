@@ -3,17 +3,17 @@ package modules;
 import java.util.ArrayList;
 
 public class State {
-    private String firstPlayer;
-    private String secondPlayer;
-    private String currentPlayer;
+    private Player firstPlayer;
+    private Player secondPlayer;
+    private Player currentPlayer;
     private int size;
-    private String board[][];
+    private Player board[][];
 
     int scoreFirst = 0;
     int scoreSecond = 0;
 
-    public State(String p1, String p2, int size) {
-        this.board = new String[size][size];
+    public State(Player p1, Player p2, int size) {
+        this.board = new Player[size][size];
         this.firstPlayer = p1;
         this.secondPlayer = p2;
         this.currentPlayer = p1;
@@ -28,7 +28,7 @@ public class State {
 
     public State copyState() {
         State copyState = new State(this.firstPlayer, this.secondPlayer, this.size);
-        copyState.board = new String[this.size][this.size];
+        copyState.board = new Player[this.size][this.size];
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
                 copyState.board[i][j] = this.board[i][j];
@@ -64,7 +64,7 @@ public class State {
 
     /* -------------------- GET LOCAL VARIABLE -------------------- */
 
-    public String getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return this.currentPlayer;
     }
 
@@ -85,13 +85,13 @@ public class State {
 
     /* ---------- FUNCTION ---------- */
 
-    public ArrayList<Move> getMove(String player) {
+    public ArrayList<Move> getMove() {
         ArrayList<Move> positions = new ArrayList<>();
         ArrayList<Move> getMove = new ArrayList<>();
 
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
-                if (this.board[i][j] == player) {
+                if (this.board[i][j] == this.currentPlayer) {
                     Coordinate start = new Coordinate(i, j);
 
                     /* Clone forward & backward positions */
@@ -132,7 +132,7 @@ public class State {
         return getMove;
     }
 
-    public float getScore(String player) {
+    public float getScore(Player player) {
         float score = 0;
 
         for (int i = 0; i < this.size; i++) {
@@ -219,7 +219,7 @@ public class State {
          * leur tour. 3. le plateau de jeu revient dans un état qui a déjà été joué.
          */
 
-        if (getMove(this.currentPlayer).isEmpty())
+        if (getMove().isEmpty())
             return true;
 
         if (isFull())
@@ -228,12 +228,12 @@ public class State {
         return false;
     }
 
-    public String getWinner() {
+    public Player getWinner() {
         if (getScore(this.firstPlayer) > getScore(this.secondPlayer))
             return this.firstPlayer;
         else if (getScore(this.secondPlayer) > getScore(this.firstPlayer))
             return this.secondPlayer;
         else
-            return "Tie!";
+            return null;
     }
 }

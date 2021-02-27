@@ -2,15 +2,13 @@ package modules;
 
 import java.util.ArrayList;
 
-public class AI {
-    String player;
+public class AI implements Player {
+    int depth;
+    boolean option;
 
-    public AI(String player) {
-        this.player = player;
-    }
-
-    public String getPlayer() {
-        return this.player;
+    public AI(int depth, boolean option) {
+        this.depth = depth;
+        this.option = option;
     }
 
     /* ---------- FUNCTION ---------- */
@@ -18,15 +16,15 @@ public class AI {
     public float minmax(State state, int depth) {
         float b;
         float m;
-        ArrayList<Move> moves = state.getMove(this.player);
+        ArrayList<Move> moves = state.getMove();
 
         if (depth == 0 || state.isOver())
-            return state.getScore(this.player);
+            return state.getScore(state.getCurrentPlayer());
 
         else {
 
             /* Maximizing player */
-            if (state.getCurrentPlayer().equals(this.player)) {
+            if (state.getCurrentPlayer() == state.getWinner()) {
                 b = Float.NEGATIVE_INFINITY;
                 for (Move move : moves) {
                     State nextState = state.copyState();
@@ -54,15 +52,15 @@ public class AI {
     }
 
     public float alphabeta(State state, int depth, float alpha, float beta) {
-        ArrayList<Move> moves = state.getMove(this.player);
+        ArrayList<Move> moves = state.getMove();
 
         if (depth == 0 || state.isOver())
-            return state.getScore(this.player);
+            return state.getScore(state.getCurrentPlayer());
 
         else {
 
             /* Maximizing player */
-            if (state.getCurrentPlayer().equals(this.player)) {
+            if (state.getWinner() == state.getCurrentPlayer()) {
                 for (Move move : moves) {
                     State nextState = state.copyState();
                     nextState.play(move);
@@ -90,11 +88,11 @@ public class AI {
         }
     }
 
-    public Move getBestMove(State state, int depth, boolean option) {
+    public Move getBestMove(State state) {
         float value;
         float bestValue = Float.NEGATIVE_INFINITY;
         Move bestMove = new Move();
-        ArrayList<Move> moves = state.getMove(this.player);
+        ArrayList<Move> moves = state.getMove();
 
         for (Move move : moves) {
             State nextState = state.copyState();

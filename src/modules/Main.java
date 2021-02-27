@@ -5,27 +5,21 @@ import java.util.Random;
 
 public class Main {
 
-    public static Move randomPlayer(ArrayList<Move> getMove) {
-        Random rand = new Random();
-        return getMove.get(rand.nextInt(getMove.size()));
-    }
-
     public static void main(String[] args) {
         int SIZE = 7;
-        String first = "Blue";
-        String second = "Red";
-        State game = new State(first, second, SIZE);
+
+        /* true: minmax false: alphabeta */
+        Player ai1 = new AI(4, true);
+        Player ai2 = new AI(4, true);
+
+        State game = new State(ai1, ai2, SIZE);
 
         game.display();
 
         while (!game.isOver()) {
-            String player = game.getCurrentPlayer();
-            AI ai = new AI(player);
+            Player player = game.getCurrentPlayer();
 
-            // Move move = randomPlayer(game.getMove(player));
-
-            /* true: minmax false: alphabeta */
-            Move move = ai.getBestMove(game, 4, true);
+            Move move = player.getBestMove(game);
 
             System.out.println("\nThis is " + game.getCurrentPlayer() + "'s turn, action: " + move.getAction());
 
