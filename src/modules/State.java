@@ -9,8 +9,8 @@ public class State {
     private int size;
     private Player board[][];
 
-    int scoreFirst = 0;
-    int scoreSecond = 0;
+    protected int scoreFirst = 0;
+    protected int scoreSecond = 0;
 
     public State(Player p1, Player p2, int size) {
         this.board = new Player[size][size];
@@ -48,18 +48,18 @@ public class State {
                     System.out.print(".\t");
 
                 if (this.board[i][j] == this.firstPlayer)
-                    System.out.print("▢\t");
+                    System.out.print("o\t");
 
                 if (this.board[i][j] == this.secondPlayer)
-                    System.out.print("✿\t");
+                    System.out.print("x\t");
             }
             System.out.println();
         }
     }
 
     public void displayScore() {
-        System.out.println("Score of " + this.firstPlayer + " " + getScore(this.firstPlayer));
-        System.out.println("Score of " + this.secondPlayer + " " + getScore(this.secondPlayer));
+        System.out.println("Score of " + this.firstPlayer + ": " + getScore(this.firstPlayer));
+        System.out.println("Score of " + this.secondPlayer + ": " + getScore(this.secondPlayer));
     }
 
     /* -------------------- GET LOCAL VARIABLE -------------------- */

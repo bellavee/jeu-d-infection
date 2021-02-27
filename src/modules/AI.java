@@ -3,12 +3,23 @@ package modules;
 import java.util.ArrayList;
 
 public class AI implements Player {
-    int depth;
-    boolean option;
+    private int depth;
+    private boolean option;
+
+    protected int nodeCount = 0;
 
     public AI(int depth, boolean option) {
         this.depth = depth;
         this.option = option;
+    }
+
+    public int getNodeCount() {
+        return nodeCount;
+    }
+
+    @Override
+    public String toString() {
+        return "P" + this.hashCode();
     }
 
     /* ---------- FUNCTION ---------- */
@@ -17,6 +28,7 @@ public class AI implements Player {
         float b;
         float m;
         ArrayList<Move> moves = state.getMove();
+        nodeCount++;
 
         if (depth == 0 || state.isOver())
             return state.getScore(state.getCurrentPlayer());
@@ -53,6 +65,7 @@ public class AI implements Player {
 
     public float alphabeta(State state, int depth, float alpha, float beta) {
         ArrayList<Move> moves = state.getMove();
+        nodeCount++;
 
         if (depth == 0 || state.isOver())
             return state.getScore(state.getCurrentPlayer());
@@ -67,8 +80,8 @@ public class AI implements Player {
                     alpha = Float.max(alpha, alphabeta(nextState, depth - 1, alpha, beta));
                     if (alpha >= beta)
                         return alpha;
-                }
 
+                }
                 return alpha;
             }
 
@@ -82,7 +95,6 @@ public class AI implements Player {
                     if (alpha >= beta)
                         return beta;
                 }
-
                 return beta;
             }
         }
