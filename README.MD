@@ -32,31 +32,31 @@ Personnes : BOUCHEFFA, VU, BENELAM, ADOUMA
 `int getX()` \
 `int getY()` \
 `String toString()` \
-Personnes : BOUCHEFFA, VU, BENELAM, ADOUMA
+Personnes : BOUCHEFFA, VU
 
 ## `Classe Move(Coordinate, Coordinate, char)`
 `Coordinate getStart()` \
 `Coordinate getEnd()` \
 `char getAction()` \
 `String toString()` \
-Personnes : BOUCHEFFA, VU, BENELAM, ADOUMA
+Personnes : BOUCHEFFA, VU, ADOUMA
 
 ## `Classe State(Player, Player, int)`
-`State copyState()` \
-`void display()` \
-`void displayScore()` \
-`boolean isValidOnBoard(int, int)` \
-`boolean isDifferentColor(int, int)` \
-`boolean isValidToPlace(Coordinate)` \
-`ArrayList<Move> getMove()` \
-`float getScore(Player)` \
-`void changePlayer()` \
-`void infection(Coordinate)` \
-`void play(Move)` \
-`boolean isFull()` \
-`boolean isOver()` \
-`Player getWinner()` \
-Personnes : BOUCHEFFA, VU, BENELAM, ADOUMA
+`State copyState()` VU\
+`void display()` BOUCHEFFA, VU, ADOUMA\
+`void displayScore()` BOUCHEFFA, VU\
+`boolean isValidOnBoard(int, int)` VU\
+`boolean isDifferentColor(int, int)` VU\
+`boolean isValidToPlace(Coordinate)` VU\
+`ArrayList<Move> getMove()` BOUCHEFFA, VU, ADOUMA\
+`float getScore(Player)` BOUCHEFFA, VU, ADOUMA\
+`void changePlayer()` BOUCHEFFA, VU, ADOUMA\
+`void infection(Coordinate)` VU\
+`void play(Move)` BOUCHEFFA, VU, ADOUMA\
+`boolean isFull()` BOUCHEFFA, VU, ADOUMA\
+`boolean isOver()` BOUCHEFFA, VU, ADOUMA\
+`Player getWinner()` BOUCHEFFA, VU
+
 
 
 ## `Classe Main(Player, Player, int)`
