@@ -9,45 +9,40 @@ public class Main {
         /* -------------------- VARIABLE -------------------- */
 
         Scanner scanner = new Scanner(System.in);
-        Player player1;
-        Player player2;
+        Player blue;
+        Player red;
 
-        int depth;
+        int depthBlue;
+        int depthRed;
         int option;
 
-        /* -------------------- BOARD SIZE -------------------- */
+        /* -------------------- SETUP BOARD SIZE -------------------- */
 
         System.out.print("Enter the square board size: ");
         int size = scanner.nextInt();
 
-        /* -------------------- PLAYER 1 -------------------- */
+        /* -------------------- SETUP PLAYER -------------------- */
 
-        System.out.print("Enter the depth of player 1: ");
-        depth = scanner.nextInt();
+        System.out.print("Enter the depth of Blue Player (o): ");
+        depthBlue = scanner.nextInt();
 
-        System.out.print("1-MinMax or 2-AlphaBeta: ");
-        do {
-            option = scanner.nextInt();
-            if (option == 1)
-                player1 = new Player(depth, true);
-            else
-                player1 = new Player(depth, false);
-        } while (option != 1 && option != 2);
-
-        /* true: minmax false: alphabeta */
-
-        /* -------------------- PLAYER 2 -------------------- */
-
-        System.out.print("Enter the depth of player 2: ");
-        depth = scanner.nextInt();
+        System.out.print("Enter the depth of Red Player (x): ");
+        depthRed = scanner.nextInt();
 
         System.out.print("1-MinMax or 2-AlphaBeta: ");
         do {
+
             option = scanner.nextInt();
-            if (option == 1)
-                player2 = new Player(depth, true);
-            else
-                player2 = new Player(depth, false);
+            if (option == 1) {
+                blue = new Player(depthBlue, true);
+                red = new Player(depthRed, true);
+            }
+
+            else {
+                blue = new Player(depthBlue, false);
+                red = new Player(depthRed, false);
+            }
+
         } while (option != 1 && option != 2);
 
         /* true: minmax false: alphabeta */
@@ -55,9 +50,10 @@ public class Main {
         /* -------------------- START GAME -------------------- */
 
         System.out.println("\n---------- START ----------\n");
-        State game = new State(player1, player2, size);
+        State game = new State(blue, red, size);
 
         game.display();
+        System.out.println("Blue - " + blue.toString() + " go first");
         System.out.println("\n-------------------------\n");
 
         while (!game.isOver()) {
@@ -76,9 +72,9 @@ public class Main {
         System.out.println("Winner is: " + game.getWinner() + "\n");
         System.out.println("---------- DETAIL ----------");
         game.displayScore();
-        System.out.println(player1.toString() + " has visited: " + player1.getNodeCount() + " nodes.");
-        System.out.println(player2.toString() + " has visited: " + player2.getNodeCount() + " nodes.");
-        System.out.println("Total nodes: " + (player1.getNodeCount() + player2.getNodeCount()) + "\n");
+        System.out.println(blue.toString() + " has visited: " + blue.getNodeCount() + " nodes.");
+        System.out.println(red.toString() + " has visited: " + red.getNodeCount() + " nodes.");
+        System.out.println("Total nodes: " + (blue.getNodeCount() + red.getNodeCount()) + "\n");
 
         scanner.close();
     }

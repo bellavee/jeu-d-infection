@@ -12,16 +12,16 @@ public class State {
     protected int scoreFirst = 0;
     protected int scoreSecond = 0;
 
-    public State(Player p1, Player p2, int size) {
+    public State(Player first, Player second, int size) {
         this.board = new Player[size][size];
-        this.firstPlayer = p1;
-        this.secondPlayer = p2;
-        this.currentPlayer = p1;
+        this.firstPlayer = first;
+        this.secondPlayer = second;
+        this.currentPlayer = first;
         this.size = size;
-        this.board[0][0] = this.firstPlayer;
-        this.board[size - 1][size - 1] = this.firstPlayer;
-        this.board[size - 1][0] = this.secondPlayer;
-        this.board[0][size - 1] = this.secondPlayer;
+        this.board[size - 1][0] = this.firstPlayer;
+        this.board[0][size - 1] = this.firstPlayer;
+        this.board[0][0] = this.secondPlayer;
+        this.board[size - 1][size - 1] = this.secondPlayer;
     }
 
     /* -------------------- INSTALL -------------------- */
@@ -58,8 +58,8 @@ public class State {
     }
 
     public void displayScore() {
-        System.out.println("Score of " + this.firstPlayer + ": " + getScore(this.firstPlayer));
-        System.out.println("Score of " + this.secondPlayer + ": " + getScore(this.secondPlayer));
+        System.out.println("Score of Blue - " + this.firstPlayer + ": " + getScore(this.firstPlayer));
+        System.out.println("Score of Red - " + this.secondPlayer + ": " + getScore(this.secondPlayer));
     }
 
     /* -------------------- GET LOCAL VARIABLE -------------------- */
@@ -150,7 +150,6 @@ public class State {
             score += (float) this.scoreSecond / (this.scoreFirst + this.scoreSecond);
 
         return score;
-
     }
 
     public void changePlayer() {
@@ -196,10 +195,10 @@ public class State {
         else {
             this.board[start.x][start.y] = null;
             this.board[end.x][end.y] = this.currentPlayer;
+            infection(end);
         }
 
         changePlayer();
-
     }
 
     public boolean isFull() {
@@ -212,17 +211,16 @@ public class State {
         return true;
     }
 
+    /*
+     * 1. un des joueurs ne dispose plus de pion. 2. les deux joueurs doivent passer
+     * leur tour. 3. le plateau de jeu revient dans un état qui a déjà été joué.
+     */
+
     public boolean isOver() {
-
-        /*
-         * 1. un des joueurs ne dispose plus de pion. 2. les deux joueurs doivent passer
-         * leur tour. 3. le plateau de jeu revient dans un état qui a déjà été joué.
-         */
-
         if (getMove().isEmpty())
             return true;
 
-        if (isFull())
+        else if (isFull())
             return true;
 
         return false;
