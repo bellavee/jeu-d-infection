@@ -48,10 +48,10 @@ public class State {
                     System.out.print(".\t");
 
                 if (this.board[i][j] == this.firstPlayer)
-                    System.out.print("o\t");
+                    System.out.print("x\t");
 
                 if (this.board[i][j] == this.secondPlayer)
-                    System.out.print("x\t");
+                    System.out.print("o\t");
             }
             System.out.println();
         }

@@ -23,13 +23,13 @@ public class Main {
 
         /* -------------------- SETUP PLAYER -------------------- */
 
-        System.out.print("Enter the depth of Blue Player (o): ");
+        System.out.print("Enter the depth of Blue Player (x): ");
         depthBlue = scanner.nextInt();
 
-        System.out.print("Enter the depth of Red Player (x): ");
+        System.out.print("Enter the depth of Red Player (o): ");
         depthRed = scanner.nextInt();
 
-        System.out.print("1-MinMax or 2-AlphaBeta: ");
+        System.out.print("1-minmax or 2-alphabeta: ");
         do {
 
             option = scanner.nextInt();
@@ -54,6 +54,7 @@ public class Main {
 
         game.display();
         System.out.println("Blue - " + blue.toString() + " go first");
+        System.out.println("red - " + red.toString() + " go after");
         System.out.println("\n-------------------------\n");
 
         while (!game.isOver()) {
