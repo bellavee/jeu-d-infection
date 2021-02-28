@@ -29,9 +29,9 @@ public class Main {
         do {
             option = scanner.nextInt();
             if (option == 1)
-                player1 = new AI(depth, true);
+                player1 = new Player(depth, true);
             else
-                player1 = new AI(depth, false);
+                player1 = new Player(depth, false);
         } while (option != 1 && option != 2);
 
         /* true: minmax false: alphabeta */
@@ -45,9 +45,9 @@ public class Main {
         do {
             option = scanner.nextInt();
             if (option == 1)
-                player2 = new AI(depth, true);
+                player2 = new Player(depth, true);
             else
-                player2 = new AI(depth, false);
+                player2 = new Player(depth, false);
         } while (option != 1 && option != 2);
 
         /* true: minmax false: alphabeta */
