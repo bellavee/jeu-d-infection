@@ -187,17 +187,15 @@ public class State {
         Coordinate start = move.start;
         Coordinate end = move.end;
 
-        if (move.type == 'C') {
+        if (move.type == 'C')
             this.board[end.x][end.y] = this.currentPlayer;
-            infection(end);
-        }
 
         else {
             this.board[start.x][start.y] = null;
             this.board[end.x][end.y] = this.currentPlayer;
-            infection(end);
         }
 
+        infection(end);
         changePlayer();
     }
 
@@ -210,11 +208,6 @@ public class State {
         }
         return true;
     }
-
-    /*
-     * 1. un des joueurs ne dispose plus de pion. 2. les deux joueurs doivent passer
-     * leur tour. 3. le plateau de jeu revient dans un état qui a déjà été joué.
-     */
 
     public boolean isOver() {
         if (getMove().isEmpty())
