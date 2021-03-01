@@ -8,8 +8,8 @@ TRAVAUX PRATIQUES I.A EN SECURITE ET AIDE A LA DECISION : JEU D'INFECTION
 A - Numéros étudiants & noms :
 ----------------------------------------------------------------------
 
-    1 - BOUCHHEFA Badis - 21914662  
-    2 - VU Nguyen Phuong Vy - 21911658
+    1 - VU Nguyen Phuong Vy - 21911658
+    2 - BOUCHHEFA Badis - 21914662  
     3 - ADOUMA Hassan Brahim - 21901741 
     4 - BENELAM Kamel - 21913417 
 

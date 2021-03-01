@@ -60,7 +60,7 @@ public class Main {
         while (!game.isOver()) {
             Player player = game.getCurrentPlayer();
             Move move = player.getBestMove(game);
-            System.out.println("This is " + game.getCurrentPlayer() + "'s turn, action: " + move.getAction());
+            System.out.println("This is " + game.getCurrentPlayer() + "'s turn, action: " + move.getType());
             game.play(move);
             game.display();
             game.displayScore();

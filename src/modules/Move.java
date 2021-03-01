@@ -24,7 +24,7 @@ public class Move {
         return this.end;
     }
 
-    public char getAction() {
+    public char getType() {
         return this.type;
     }
 
